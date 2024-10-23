@@ -1,0 +1,10 @@
+Grupul 4: Gestionare Angajați (Entitate: Angajat)
+•	Entitatea: Angajat
+•	Cerințe CRUD:
+o	C (Create): Adăugarea unui nou angajat cu informații precum: nume, prenume, poziție, departament, data angajării, salariu.
+o	R (Read): Afișarea unei liste cu angajați, cu opțiuni de căutare după nume sau departament.
+o	U (Update): Editarea informațiilor unui angajat, de exemplu schimbarea poziției sau ajustarea salariului.
+o	D (Delete): Ștergerea unui angajat din sistem.
+•	Condiții suplimentare:
+o	Sistemul trebuie să ofere posibilitatea de a evidenția angjații cu un staj de muncă mai mare de 5 ani.
+o	Sistemul trebuie să ofere posibilitatea de a genera rapoarte pe departamente (număr angajați, salariul mediu).
