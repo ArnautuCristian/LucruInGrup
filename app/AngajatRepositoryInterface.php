@@ -7,5 +7,4 @@ interface AngajatRepositoryInterface
     public function updateEmployee($id, $nume, $prenume, $pozitie, $departament, $data_angajarii, $salariu);
     public function deleteEmployee($id);
     public function getEmployeesWithMoreThan5Years();
-    public function generateReportsByDepartment();
 }

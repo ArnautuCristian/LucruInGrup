@@ -1,8 +1,36 @@
 <?php
-    session_start();
-    require_once './bootstrap.php';
-    $angajatRepository = new AngajatRepository($databaseConnection);
-    $angajati = $angajatRepository->readEmployees();
+session_start();
+require_once './bootstrap.php';
+$angajatRepository = new AngajatRepository($databaseConnection);
+
+// Obținem parametrii de filtrare
+$numeFiltrat = isset($_GET['nume']) ? htmlspecialchars($_GET['nume']) : '';
+$departamentFiltrat = isset($_GET['departament']) ? htmlspecialchars($_GET['departament']) : '';
+
+// Obținem lista departamentelor și lista angajaților pe baza filtrelor
+$angajati = $angajatRepository->filterEmployees($numeFiltrat, $departamentFiltrat);
+$departamente = array_unique(array_column($angajatRepository->readEmployees(), 'departament'));
+
+// Obținem raportul pe departamente
+$raportDepartamente = $angajatRepository->getDepartmentReport();
+
+function isOver5Years($data_angajarii) {
+    $years = (new DateTime())->diff(new DateTime($data_angajarii))->y;
+    return $years > 5;
+}
+
+// Gestionare adăugare angajat
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nume = $_POST['nume'];
+    $prenume = $_POST['prenume'];
+    $pozitie = $_POST['pozitie'];
+    $departament = $_POST['departament'];
+    $data_angajarii = $_POST['data_angajarii'];
+    $salariu = $_POST['salariu'];
+    $angajatRepository->createEmployee($nume, $prenume, $pozitie, $departament, $data_angajarii, $salariu);
+    header('Location: index.php');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +47,7 @@
     <div class="container mt-5">
         <h2>Adaugă Angajat</h2>
         <form method="POST">
+            <!-- Formul pentru adăugarea unui nou angajat -->
             <div class="mb-3">
                 <label for="nume" class="form-label">Nume</label>
                 <input type="text" class="form-control" id="nume" name="nume" required>
@@ -48,6 +77,30 @@
     </div>
 
     <div class="container mt-5">
+        <!-- Filtrare angajați -->
+        <h2>Filtrează Angajați</h2>
+        <form method="GET" class="mb-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="nume" placeholder="Caută după nume" value="<?php echo $numeFiltrat; ?>">
+                </div>
+                <div class="col-md-4">
+                    <select name="departament" class="form-control">
+                        <option value="">Selectează departamentul</option>
+                        <?php foreach ($departamente as $departament): ?>
+                            <option value="<?php echo htmlspecialchars($departament); ?>"
+                                <?php echo ($departament === $departamentFiltrat) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($departament); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Filtrează</button>
+                </div>
+            </div>
+        </form>
+
         <?php if (isset($_SESSION['mesaj'])): ?>
             <div class="alert alert-success">
                 <?php
@@ -75,7 +128,14 @@
                 <?php foreach ($angajati as $angajat): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($angajat['id']); ?></td>
-                        <td><?php echo htmlspecialchars($angajat['nume']); ?></td>
+                        <td>
+                            <?php 
+                                echo htmlspecialchars($angajat['nume']);
+                                if (isOver5Years($angajat['data_angajarii'])) {
+                                    echo " 🏆";
+                                }
+                            ?>
+                        </td>
                         <td><?php echo htmlspecialchars($angajat['prenume']); ?></td>
                         <td><?php echo htmlspecialchars($angajat['pozitie']); ?></td>
                         <td><?php echo htmlspecialchars($angajat['departament']); ?></td>
@@ -90,22 +150,30 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
+
+        <!-- Raport pe departamente -->
+        <h2 class="mt-5">Raport pe Departamente</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Departament</th>
+                    <th>Număr Angajați</th>
+                    <th>Salariu Mediu</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($raportDepartamente as $raport): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($raport['departament']); ?></td>
+                        <td><?php echo htmlspecialchars($raport['numar_angajati']); ?></td>
+                        <td><?php echo number_format($raport['salariu_mediu'], 2); ?> lei</td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
-
-<?php
-// create_employee.php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nume = $_POST['nume'];
-    $prenume = $_POST['prenume'];
-    $pozitie = $_POST['pozitie'];
-    $departament = $_POST['departament'];
-    $data_angajarii = $_POST['data_angajarii'];
-    $salariu = $_POST['salariu'];
-    $angajatRepository->createEmployee($nume, $prenume, $pozitie, $departament, $data_angajarii, $salariu);
-    header('Location: index.php');
-    exit;
-}
