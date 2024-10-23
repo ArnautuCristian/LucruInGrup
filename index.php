@@ -171,6 +171,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <!-- Raport pe departamente -->
+<h2 class="mt-5">Raport pe Departamente</h2>
+<a href="raport.php" class="btn btn-info mb-5">Vizualizează Raportul pe Departamente</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
