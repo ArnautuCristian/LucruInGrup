@@ -1,10 +1,15 @@
 <?php
+// Include fișierul 'bootstrap.php' pentru a inițializa aplicația, încărcând toate dependențele necesare, inclusiv conexiunea la baza de date și alte configurări.
 require_once './bootstrap.php';
+// Creează o instanță a clasei 'AngajatRepository', folosind conexiunea la baza de date pentru a interacționa cu datele angajaților.
 $angajatRepository = new AngajatRepository($databaseConnection);
+// Verifică dacă există un parametru 'id' în URL. Acesta este utilizat pentru a identifica angajatul care va fi editat. 
 if (isset($_GET['id'])) {
+    // Curăță valoarea primită prin GET pentru a preveni atacurile de tip XSS (cross-site scripting).
     $id = htmlspecialchars($_GET['id']);
+    // Obține datele angajatului din baza de date pe baza ID-ului.
     $angajat = $angajatRepository->getById($id);
-
+    // Verifică dacă metoda de trimitere a formularului este 'POST', ceea ce indică faptul că datele formularului au fost trimise pentru actualizare.
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nume = $_POST['nume'];
         $prenume = $_POST['prenume'];
