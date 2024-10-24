@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 24, 2024 at 08:35 AM
+-- Generation Time: Oct 24, 2024 at 09:30 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,13 +38,6 @@ CREATE TABLE `angajati` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `angajati`
---
-
-INSERT INTO `angajati` (`id`, `nume`, `prenume`, `pozitie`, `departament`, `data_angajarii`, `salariu`) VALUES
-(1, 'Carmen', 'Normal', 'cvbnm', 'Kiborg', '2009-10-10', 5.00);
-
---
 -- Indexes for dumped tables
 --
 
@@ -62,7 +55,7 @@ ALTER TABLE `angajati`
 -- AUTO_INCREMENT for table `angajati`
 --
 ALTER TABLE `angajati`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
