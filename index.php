@@ -152,26 +152,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </table>
 
         <!-- Raport pe departamente -->
-        <h2 class="mt-5">Raport pe Departamente</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Departament</th>
-                    <th>Număr Angajați</th>
-                    <th>Salariu Mediu</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($raportDepartamente as $raport): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($raport['departament']); ?></td>
-                        <td><?php echo htmlspecialchars($raport['numar_angajati']); ?></td>
-                        <td><?php echo number_format($raport['salariu_mediu'], 2); ?> lei</td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-        <!-- Raport pe departamente -->
 <h2 class="mt-5">Raport pe Departamente</h2>
 <a href="raport.php" class="btn btn-info mb-5">Vizualizează Raportul pe Departamente</a>
     </div>
