@@ -28,6 +28,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data_angajarii = $_POST['data_angajarii'];
     $salariu = $_POST['salariu'];
     $angajatRepository->createEmployee($nume, $prenume, $pozitie, $departament, $data_angajarii, $salariu);
+
+    // Setăm mesajul de confirmare
+    $_SESSION['mesaj'] = "Angajatul $nume $prenume a fost adăugat cu succes!";
+    header('Location: index.php');
+    exit;
+}
+
+// Gestionare actualizare angajat (exemplu)
+if (isset($_POST['update'])) {
+    $id = $_POST['id'];
+    $nume = $_POST['nume'];
+    $prenume = $_POST['prenume'];
+    $pozitie = $_POST['pozitie'];
+    $departament = $_POST['departament'];
+    $data_angajarii = $_POST['data_angajarii'];
+    $salariu = $_POST['salariu'];
+    $angajatRepository->updateEmployee($id, $nume, $prenume, $pozitie, $departament, $data_angajarii, $salariu);
+
+    // Setăm mesajul de confirmare pentru actualizare
+    $_SESSION['mesaj'] = "Angajatul $nume $prenume a fost actualizat cu succes!";
+    header('Location: index.php');
+    exit;
+}
+
+// Gestionare ștergere angajat (exemplu)
+if (isset($_GET['delete'])) {
+    $id = $_GET['id'];
+    $angajat = $angajatRepository->readEmployeeById($id);
+    $angajatRepository->deleteEmployee($id);
+
+    // Setăm mesajul de confirmare pentru ștergere
+    $_SESSION['mesaj'] = "Angajatul " . $angajat['nume'] . " " . $angajat['prenume'] . " a fost șters cu succes!";
     header('Location: index.php');
     exit;
 }
@@ -77,6 +109,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="container mt-5">
+        <!-- Afișare mesaj de confirmare -->
+        <?php if (isset($_SESSION['mesaj'])): ?>
+            <div class="alert alert-success">
+                <?php
+                echo $_SESSION['mesaj'];
+                unset($_SESSION['mesaj']);
+                ?>
+            </div>
+        <?php endif; ?>
+
         <!-- Filtrare angajați -->
         <h2>Filtrează Angajați</h2>
         <form method="GET" class="mb-4">
@@ -101,15 +143,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </form>
 
-        <?php if (isset($_SESSION['mesaj'])): ?>
-            <div class="alert alert-success">
-                <?php
-                echo $_SESSION['mesaj'];
-                unset($_SESSION['mesaj']);
-                ?>
-            </div>
-        <?php endif; ?>
-        
         <h2 class="mb-4">Lista Angajaților</h2>
         <table class="table table-bordered">
             <thead>
@@ -152,8 +185,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </table>
 
         <!-- Raport pe departamente -->
-<h2 class="mt-5">Raport pe Departamente</h2>
-<a href="raport.php" class="btn btn-info mb-5">Vizualizează Raportul pe Departamente</a>
+        <h2 class="mt-5">Raport pe Departamente</h2>
+        <a href="raport.php" class="btn btn-info mb-5">Vizualizează Raportul pe Departamente</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
